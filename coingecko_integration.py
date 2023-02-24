@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-class DataCollector:
+class CoinGeckoCollector:
     def __init__(self, coins) -> None:
         self.data = {}
         for coin in coins:
@@ -40,7 +40,7 @@ with open('tokens.json', 'r') as f:
     for coin in coins_dict.keys():
         coins.append(coins_dict[coin]['cg_id'])
 
-dc = DataCollector(coins)
+dc = CoinGeckoCollector(coins)
 
 all_coin_data = {}
 for coin in coins:
