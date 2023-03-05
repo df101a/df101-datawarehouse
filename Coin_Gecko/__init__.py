@@ -46,6 +46,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             coin_data['all_time_high'] = res['market_data']['ath']
             coin_data['all_time_high_date'] = res['market_data']['ath_date']
         token_data.append(coin_data)
-        time.sleep(1)
+        time.sleep(4)
 
     msg.set(json.dumps(token_data))
