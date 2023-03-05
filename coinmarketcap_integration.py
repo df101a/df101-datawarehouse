@@ -1,9 +1,9 @@
 import os
-from dotenv import load_dotenv
+
 import requests
 import json
 import pandas as pd
-load_dotenv()
+
 
 class CoinMarketCapCollector:
     def __init__(self,) -> None:
