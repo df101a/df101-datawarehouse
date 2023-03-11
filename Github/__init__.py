@@ -2,6 +2,8 @@ import datetime
 import logging
 import requests
 import json
+import pandas as pd
+import numpy as np
 import os
 import azure.functions as func
 
@@ -36,11 +38,16 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             #    json.dump(self.basic_data, f)
         
         def get_github_commits(self,):
-            print(self.commits_per_week)
-            return sum(self.commits_per_week['all'])
+            if 'all' in self.commits_per_week.keys():
+                return self.commits_per_week['all']
+            else:
+                return 'N/A'
         
         def get_github_average_commits_per_week(self,):
-            return sum(self.commits_per_week['all']) / len(self.commits_per_week['all']) ## Gets the github commits per week
+            if 'all' in self.commits_per_week.keys():
+                return sum(self.commits_per_week['all']) / len(self.commits_per_week['all']) ## Gets the github commits per week
+            else:
+                return 'N/A'
         
         def get_github_contributors(self,):
             return len(self.contributors)
@@ -55,7 +62,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             return self.basic_data['stargazers_count']
 
         def get_github_merged_pull_requests(self,):
-            if 'total_count' in self.open_issues.keys():
+            if 'total_count' in self.merged_pull_requests.keys():
                 return self.merged_pull_requests['total_count']
             else:
                 return 'N/A'
@@ -83,15 +90,20 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     with open('tokens.json', 'r') as f:
         tokens = json.load(f)
             
-    all_token_data = []
+    token_data = []
 
     for coin in tokens.keys():
         coin_data = {}
-        coin_data['Token'] = coin
+        coin_data['token'] = coin
         repo_address = tokens[coin]['github_repo'].replace('http://api.github.com/repos/','')
         if repo_address != '':
             dc=GithubAPI(repo_address)
             ## Github Data
+            coin_data["timestampz"] = (
+                datetime.datetime.utcnow()
+                .replace(tzinfo=datetime.timezone.utc)
+                .isoformat()
+            )
             coin_data['github_commits'] = dc.get_github_commits()
             coin_data['github_average_commits_per_week'] = dc.get_github_average_commits_per_week()
             coin_data['github_contributors'] = dc.get_github_contributors()
@@ -103,6 +115,31 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             coin_data['github_closed_issues'] = dc.get_github_closed_issues()
             coin_data['github_commit_speed_per_contributor'] = dc.get_github_commit_speed_per_contributor()
             coin_data['github_capitalization_contributors'] = dc.get_github_capitalizastion_contribtors()
-        all_token_data.append(coin_data)
+        token_data.append(coin_data)
+        
+    #Formatting all responses    
+    df = pd.DataFrame(token_data)  # dataframing because this is easier
+    df.set_index("token", inplace=True)
+    update_time = df[["timestampz"]].to_dict()
+    df.drop(columns=["timestampz"], inplace=True)
+    df.replace(np.nan, None, inplace=True)
+    df.replace('N/A', None, inplace=True)
+    df_dict = df.to_dict()
 
-    msg.set(json.dumps(all_token_data))
+    #preparing upload
+    messages = {}
+
+    for topic in df_dict.keys():
+        messages[topic] = [
+            {
+                "token": k,
+                "value": v,
+                "timestampz": update_time["timestampz"][k],
+                "source": "GitHub",
+                # "GUID_functions": context.invocation_id,
+            }
+            for k, v in df_dict[topic].items()
+            if v is not None
+        ]
+        
+    msg.set(json.dumps(messages))
