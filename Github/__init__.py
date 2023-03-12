@@ -19,23 +19,49 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         
     class GithubAPI:
         def __init__(self, repo_name) -> None:
-            self.access_token = os.environ.get("github-access-token")
+            self.access_token = os.environ.get("github-access-token") # WILL EXPIRE IN MARCH 2024
             self.headers = {"Authorization": f"Bearer {self.access_token}"}
             
-            self.basic_data = requests.get(f"https://api.github.com/repos/{repo_name}", headers=self.headers).json()
-            self.contributors = requests.get(f"https://api.github.com/repos/{repo_name}/contributors", headers=self.headers).json()
+            try:
+                logging.info(f"Fetching basic github data for repository {repo_name}")
+                self.basic_data = requests.get(f"https://api.github.com/repos/{repo_name}", headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching basic data for github repository {repo_name} -- {str(e)}")
+                
+            try:
+                logging.info(f"Fetching contributor github data for repository {repo_name}")
+                self.contributors = requests.get(f"https://api.github.com/repos/{repo_name}/contributors", headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching contributor for github repository {repo_name} -- {str(e)}")
             
-            commit_path = f"https://api.github.com/repos/{repo_name}/stats/participation"
-            self.commits_per_week = requests.get(commit_path, headers=self.headers).json()
+            try:
+                logging.info(f"Fetching commit github data for repository {repo_name}")
+                commit_path = f"https://api.github.com/repos/{repo_name}/stats/participation"
+                self.commits_per_week = requests.get(commit_path, headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching commit data for github repository {repo_name} -- {str(e)}")
             
-            open_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1"
-            self.open_issues = requests.get(open_issue_path, headers=self.headers).json()
-            closed_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1"
-            self.closed_issues = requests.get(closed_issue_path, headers=self.headers).json()
-            merged_pull_requests_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1"
-            self.merged_pull_requests = requests.get(merged_pull_requests_path, headers=self.headers).json()
-            #with open(f"sample_data/github-data-{path.split('/')[-2]}-{path.split('/')[-1]}.json", 'w') as f:
-            #    json.dump(self.basic_data, f)
+            try:
+                logging.info(f"Fetching open issue github data for repository {repo_name}")
+                open_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1"
+                self.open_issues = requests.get(open_issue_path, headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching open issue data from github repository {repo_name} -- {str(e)}")
+            
+            try:
+                logging.info(f"Fetching closed issue github data for repository {repo_name}")
+                closed_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1"
+                self.closed_issues = requests.get(closed_issue_path, headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching closed issue data from github repository {repo_name} -- {str(e)}")
+            
+            try:
+                logging.info(f"Fetching merged pull requests github data for repository {repo_name}")
+                merged_pull_requests_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1"
+                self.merged_pull_requests = requests.get(merged_pull_requests_path, headers=self.headers).json()
+            except Exception as e:
+                logging.error(f"Encountered an error when fetching merged pull request data from github repository {repo_name} -- {str(e)}")
+
         
         def get_github_commits(self,):
             if 'all' in self.commits_per_week.keys():
@@ -91,30 +117,35 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         tokens = json.load(f)
             
     token_data = []
-
+    
     for coin in tokens.keys():
         coin_data = {}
+        logging.info(f"Fetching github data for token {coin}")
         coin_data['token'] = coin
         repo_address = tokens[coin]['github_repo'].replace('http://api.github.com/repos/','')
-        if repo_address != '':
-            dc=GithubAPI(repo_address)
-            ## Github Data
-            coin_data["timestampz"] = (
-                datetime.datetime.utcnow()
-                .replace(tzinfo=datetime.timezone.utc)
-                .isoformat()
-            )
-            coin_data['github_commits'] = dc.get_github_commits()
-            coin_data['github_average_commits_per_week'] = dc.get_github_average_commits_per_week()
-            coin_data['github_contributors'] = dc.get_github_contributors()
-            coin_data['github_forks'] = dc.get_github_forks()
-            coin_data['github_watchers'] = dc.get_github_watchers()
-            coin_data['github_stars'] = dc.get_github_stars()
-            coin_data['github_merged_pull_requests'] = dc.get_github_merged_pull_requests()
-            coin_data['github_open_issues'] = dc.get_github_open_issues()
-            coin_data['github_closed_issues'] = dc.get_github_closed_issues()
-            coin_data['github_commit_speed_per_contributor'] = dc.get_github_commit_speed_per_contributor()
-            coin_data['github_capitalization_contributors'] = dc.get_github_capitalizastion_contribtors()
+
+        if repo_address == '':
+            logging.error(f"Missing repository for token {coin}")
+            continue
+        
+        dc=GithubAPI(repo_address)
+        ## Github Data
+        coin_data["timestampz"] = (
+            datetime.datetime.utcnow()
+            .replace(tzinfo=datetime.timezone.utc)
+            .isoformat()
+        )
+        coin_data['github_commits'] = dc.get_github_commits()
+        coin_data['github_average_commits_per_week'] = dc.get_github_average_commits_per_week()
+        coin_data['github_contributors'] = dc.get_github_contributors()
+        coin_data['github_forks'] = dc.get_github_forks()
+        coin_data['github_watchers'] = dc.get_github_watchers()
+        coin_data['github_stars'] = dc.get_github_stars()
+        coin_data['github_merged_pull_requests'] = dc.get_github_merged_pull_requests()
+        coin_data['github_open_issues'] = dc.get_github_open_issues()
+        coin_data['github_closed_issues'] = dc.get_github_closed_issues()
+        coin_data['github_commit_speed_per_contributor'] = dc.get_github_commit_speed_per_contributor()
+        coin_data['github_capitalization_contributors'] = dc.get_github_capitalizastion_contribtors()
         token_data.append(coin_data)
         
     #Formatting all responses    

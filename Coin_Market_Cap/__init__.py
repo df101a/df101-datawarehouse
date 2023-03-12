@@ -70,4 +70,5 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is not None
         ]
 
+    logging.info(json.dumps(messages))
     msg.set(json.dumps(messages))
