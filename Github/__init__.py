@@ -6,7 +6,91 @@ import pandas as pd
 import numpy as np
 import os
 import azure.functions as func
+from collections.abc import MutableMapping
+import pandas as pd
+import time
 
+def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
+    if len(d.keys()) == 0:
+        return {}
+    [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
+    return flat_dict
+
+def call_github_endpoint(url, topic=None, token_id=None):
+    access_token = os.environ.get("github-access-token") # WILL EXPIRE IN MARCH 2024
+    headers = {"Authorization": f"Bearer {access_token}"}
+    data = None
+
+    try:
+        data = requests.get(url, headers=headers).json()
+    except Exception as ex:
+        logging.error(f"Encountered an error when fetching github's {topic} for token {token_id}")
+        
+    return data
+
+def get_all_data(token_id: str, repo_name: str):
+    data = {
+        'basic': None,
+        'contributor': None,
+        'commits': None,
+        'openissues': None,
+        'closedissues': None,
+        'mergedpullrequests': None
+    }
+
+    data['basic'] = call_github_endpoint(
+        url=f"https://api.github.com/repos/{repo_name}",
+        topic='basic data',
+        token_id=token_id
+    )
+    data['contributor'] = call_github_endpoint(
+        url=f"https://api.github.com/repos/{repo_name}/contributors",
+        topic='contributor data',
+        token_id=token_id
+    )
+    data['commits'] = call_github_endpoint(
+        url=f"https://api.github.com/repos/{repo_name}/stats/participation",
+        topic='commit data',
+        token_id=token_id
+    )
+    data['openissues'] = call_github_endpoint(
+        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1",
+        topic='open issue data',
+        token_id=token_id
+    )
+    data['closedissues'] = call_github_endpoint(
+        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1",
+        topic='closed issues data',
+        token_id=token_id
+    )
+    data['mergedpullrequests'] = call_github_endpoint(
+        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1",
+        topic='merged pull request data',
+        token_id=token_id
+    )
+
+    return flatten_dict(data)
+
+def get_empty_coin_data(coin):
+    coin_data = {}
+    coin_data['token'] = coin
+    coin_data["timestampz"] = (
+        datetime.datetime.utcnow()
+        .replace(tzinfo=datetime.timezone.utc)
+        .isoformat()
+    )
+    coin_data['github_commits'] = None
+    coin_data['github_average_commits_per_week'] = None
+    coin_data['github_contributors'] = None
+    coin_data['github_forks'] = None
+    coin_data['github_watchers'] = None
+    coin_data['github_stars'] =  None
+    coin_data['github_merged_pull_requests'] = None
+    coin_data['github_open_issues'] = None
+    coin_data['github_closed_issues'] = None
+    coin_data['github_commit_speed_per_contributor'] = None 
+    coin_data['github_capitalization_contributors'] = None 
+    return coin_data
 
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -17,102 +101,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
 
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
         
-    class GithubAPI:
-        def __init__(self, repo_name) -> None:
-            self.access_token = os.environ.get("github-access-token") # WILL EXPIRE IN MARCH 2024
-            self.headers = {"Authorization": f"Bearer {self.access_token}"}
-            
-            try:
-                logging.info(f"Fetching basic github data for repository {repo_name}")
-                self.basic_data = requests.get(f"https://api.github.com/repos/{repo_name}", headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching basic data for github repository {repo_name} -- {str(e)}")
-                
-            try:
-                logging.info(f"Fetching contributor github data for repository {repo_name}")
-                self.contributors = requests.get(f"https://api.github.com/repos/{repo_name}/contributors", headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching contributor for github repository {repo_name} -- {str(e)}")
-            
-            try:
-                logging.info(f"Fetching commit github data for repository {repo_name}")
-                commit_path = f"https://api.github.com/repos/{repo_name}/stats/participation"
-                self.commits_per_week = requests.get(commit_path, headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching commit data for github repository {repo_name} -- {str(e)}")
-            
-            try:
-                logging.info(f"Fetching open issue github data for repository {repo_name}")
-                open_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1"
-                self.open_issues = requests.get(open_issue_path, headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching open issue data from github repository {repo_name} -- {str(e)}")
-            
-            try:
-                logging.info(f"Fetching closed issue github data for repository {repo_name}")
-                closed_issue_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1"
-                self.closed_issues = requests.get(closed_issue_path, headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching closed issue data from github repository {repo_name} -- {str(e)}")
-            
-            try:
-                logging.info(f"Fetching merged pull requests github data for repository {repo_name}")
-                merged_pull_requests_path = f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1"
-                self.merged_pull_requests = requests.get(merged_pull_requests_path, headers=self.headers).json()
-            except Exception as e:
-                logging.error(f"Encountered an error when fetching merged pull request data from github repository {repo_name} -- {str(e)}")
-
-        
-        def get_github_commits(self,):
-            if 'all' in self.commits_per_week.keys():
-                return self.commits_per_week['all']
-            else:
-                return 'N/A'
-        
-        def get_github_average_commits_per_week(self,):
-            if 'all' in self.commits_per_week.keys():
-                return sum(self.commits_per_week['all']) / len(self.commits_per_week['all']) ## Gets the github commits per week
-            else:
-                return 'N/A'
-        
-        def get_github_contributors(self,):
-            return len(self.contributors)
-        
-        def get_github_forks(self,):
-            return self.basic_data['forks_count']
-        
-        def get_github_watchers(self,):
-            return self.basic_data['subscribers_count']
-        
-        def get_github_stars(self,):
-            return self.basic_data['stargazers_count']
-
-        def get_github_merged_pull_requests(self,):
-            if 'total_count' in self.merged_pull_requests.keys():
-                return self.merged_pull_requests['total_count']
-            else:
-                return 'N/A'
-
-        def get_github_open_issues(self,):
-            if 'total_count' in self.open_issues.keys():
-                return self.open_issues['total_count']
-            else:
-                return 'N/A'
-
-        def get_github_closed_issues(self,):
-            if 'total_count' in self.open_issues.keys():
-                return self.closed_issues['total_count']
-            else:
-                return 'N/A'
-            
-        def get_github_commit_speed_per_contributor(self,):
-            # TODO
-            pass
-
-        def get_github_capitalizastion_contribtors(self,):
-            # TODO
-            pass
-
     with open('tokens.json', 'r') as f:
         tokens = json.load(f)
             
@@ -126,27 +114,35 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
 
         if repo_address == '':
             logging.error(f"Missing repository for token {coin}")
+            token_data.append(get_empty_coin_data(coin))
             continue
         
-        dc=GithubAPI(repo_address)
+        data = get_all_data(coin, repo_address)
+
+        if data is None:
+            token_data.append(get_empty_coin_data(coin))
+            continue
+
         ## Github Data
         coin_data["timestampz"] = (
             datetime.datetime.utcnow()
             .replace(tzinfo=datetime.timezone.utc)
             .isoformat()
         )
-        coin_data['github_commits'] = dc.get_github_commits()
-        coin_data['github_average_commits_per_week'] = dc.get_github_average_commits_per_week()
-        coin_data['github_contributors'] = dc.get_github_contributors()
-        coin_data['github_forks'] = dc.get_github_forks()
-        coin_data['github_watchers'] = dc.get_github_watchers()
-        coin_data['github_stars'] = dc.get_github_stars()
-        coin_data['github_merged_pull_requests'] = dc.get_github_merged_pull_requests()
-        coin_data['github_open_issues'] = dc.get_github_open_issues()
-        coin_data['github_closed_issues'] = dc.get_github_closed_issues()
-        coin_data['github_commit_speed_per_contributor'] = dc.get_github_commit_speed_per_contributor()
-        coin_data['github_capitalization_contributors'] = dc.get_github_capitalizastion_contribtors()
+        coin_data['github_commits'] = sum(data['commits.all']) if 'commits.all' in data.keys() and data['commits.all'] else None
+        coin_data['github_average_commits_per_week'] = sum(data['commits.all']) / len(data['commits.all']) if 'commits.all' in data.keys() and data['commits.all'] else None
+        coin_data['github_contributors'] = len(data['contributors']) if 'contributors' in data.keys() and data['contributors'] else None
+        coin_data['github_forks'] = data['basic.forks_count'] if 'basic.forks_count' in data.keys() else None
+        coin_data['github_watchers'] = data['basic.subscribers_count'] if 'basic.subscribers_count' in data.keys() else None
+        coin_data['github_stars'] = data['basic.stargazers_count'] if 'basic.stargazers_count' in data.keys() else None
+        coin_data['github_merged_pull_requests'] = data['mergedpullrequests.total_count'] if 'mergedpullrequests.total_count' in data.keys() else None
+        coin_data['github_open_issues'] = data['openissues.total_count'] if 'openissues.total_count' in data.keys() else None
+        coin_data['github_closed_issues'] = data['closedissues.total_count'] if 'closedissues.total_count' in data.keys() else None
+        coin_data['github_commit_speed_per_contributor'] = None #TODO
+        coin_data['github_capitalization_contributors'] = None #TODO
         token_data.append(coin_data)
+        logging.info(coin_data)
+        time.sleep(2)
         
     #Formatting all responses    
     df = pd.DataFrame(token_data)  # dataframing because this is easier
@@ -159,6 +155,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
 
     #preparing upload
     messages = {}
+    missing_messages = {}
 
     for topic in df_dict.keys():
         messages[topic] = [
@@ -172,5 +169,21 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
+        
+    for topic in df_dict.keys():
+        missing_messages[topic] = [
+            {
+                "token": k,
+                "value": v,
+                "timestampz": update_time["timestampz"][k],
+                "source": "Github",
+                # "GUID_functions": context.invocation_id,
+            }
+            for k, v in df_dict[topic].items()
+            if v is None
+        ]
+
+    with open('log/missing/github.json', 'w') as f:
+         f.write(json.dumps(missing_messages))
         
     msg.set(json.dumps(messages))

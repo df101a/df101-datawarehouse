@@ -42,9 +42,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     token_data = []
 
     for token in token_data.keys():
-        # print(token_id)
         if "etherscan_symbol" in tokens_dict[token]:
-            # print("Y")
             token_data.append(
                 {
                     "token": token,

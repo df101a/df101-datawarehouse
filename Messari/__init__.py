@@ -7,32 +7,40 @@ import pandas as pd
 import numpy as np
 import os
 import azure.functions as func
+from collections.abc import MutableMapping
+import pandas as pd
 
-def call_api(url):
-    token = os.environ.get("messari-api-key")
-    res = requests.get(
-            url=url, 
-            headers = {"X-Api-Key": f"{token}"}
-        )
-    
-    res.raise_for_status()
-    return res.json()
+def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
+    if len(d.keys()) == 0:
+        return {}
+    [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
+    return flat_dict
 
-def populate_tokens_json():
-    with open("tokens.json", 'r') as f:
-        tokens = json.load(f)
 
-    for token_key in tokens.keys():
-        symbol = tokens[token_key]["cg_symbol"]
-        res = call_api(f"https://data.messari.io/api/v1/assets/{symbol}")
-        tokens[token_key]["messari_symbol"] = res['data']['symbol']
-        tokens[token_key]["messari_name"] = res['data']['name']
-        tokens[token_key]["messari_slug"] = res['data']['slug']
-        print(symbol)
-        time.sleep(2)
+def get_all_data(token_id, cg_id, messari_symbol):
+    data = {
+        'cg': None,
+        'messari':None
+    }
+    try:
+        cg_data = requests.get(url=f"https://api.coingecko.com/api/v3/coins/{cg_id}")
+        cg_data.raise_for_status()
+        data['cg'] = dict(cg_data.json())
+    except Exception as ex:
+        logging.error(f'Encountered an error when fetching data from CoinGecko for token {token_id} -- {str(ex)}')
 
-    with open(f"tokens.json", 'w') as f:
-        f.write(json.dumps(tokens))
+    try:
+        token = os.environ.get("messari-api-key")
+        messari_data = requests.get(
+                url=f"https://data.messari.io/api/v1/assets/{messari_symbol}/metrics?fields=supply/circulating,market_data/price_usd", 
+                headers = {"X-Api-Key": f"{token}"}
+            )
+        messari_data.raise_for_status()
+        data['messari'] = dict(messari_data.json())
+    except Exception as ex:
+        logging.error(f'Encountered an error when fetching Messari data -- {str(ex)}')
+    time.sleep(4)
+    return flatten_dict(data)
 
 def get_all_metrics():
     #all_coins={}
@@ -41,47 +49,55 @@ def get_all_metrics():
         coins = json.load(f)
         
         for coin_key in coins.keys():
-            cg_id = coins[coin_key]['cg_id']
             logging.info(f"Fetching Messari data for token {coin_key}")
             messari_symbol = coins[coin_key]['messari_symbol']
-            
-            cg_data = requests.get(url=f"https://api.coingecko.com/api/v3/coins/{cg_id}")
-            cg_data.raise_for_status()
-            
-            cg_data = dict(cg_data.json())
+            cg_id = coins[coin_key]['cg_id']
 
-            assert cg_data is not None, f"Not able to fetch info from coingecko for token {coin_key}"
+            coin_data = get_all_data(token_id=coin_key, cg_id=cg_id, messari_symbol=messari_symbol)
 
-            messari_data = call_api(url=f"https://data.messari.io/api/v1/assets/{messari_symbol}/metrics?fields=supply/circulating,market_data/price_usd")
-            
-            if 'market_data' in cg_data.keys():
-                total_supply = float(cg_data['market_data']['total_supply']) if cg_data['market_data']['total_supply'] else None
-            else:
-                logging.error(f"Unable to fetch total supply from coin gecko for token {coin_key}")
+            # Extract all the data we need
+            total_supply = coin_data['cg.market_data.total_supply'] if 'cg.market_data.total_supply' in coin_data.keys() else None
+            circulating = coin_data['messari.data.supply.circulating'] if 'messari.data.supply.circulating' in coin_data.keys() else None
+            price = coin_data['messari.data.market_data.price_usd'] if 'messari.data.market_data.price_usd' in coin_data.keys() else None
 
-            if 'data' in messari_data.keys():
-                circulating = float(messari_data['data']['supply']['circulating']) if messari_data['data']['supply']['circulating'] else None
-                price = float(messari_data['data']['price_usd']) if messari_data['data']['price_usd'] else None
-            else:
-                logging.error(f"Got no Messari data for token {coin_key}")
-                
-            #all_coins[coin_key] = {
-            #    'circulating_supply': circulating,
-            #    'circulating_supply_percentage': circulating / total_supply,
-            #    'tokens_staked': total_supply - circulating,
-            #    'assets_staked_on_chain': (total_supply - circulating) * price
-            #}
+            # Type casting
+            total_supply = float(total_supply) if total_supply else None 
+            circulating = float(circulating) if circulating else None
+            price = float(price) if price else None
 
-            all_coins_list.append({
+            token_data = {
                 'token': coin_key,
                 'circulating_supply': circulating,
-                'circulating_supply_percentage': circulating / total_supply,
-                'tokens_staked': total_supply - circulating,
-                'assets_staked_on_chain': (total_supply - circulating) * price
-            })
-            
+                'circulating_supply_percentage': circulating / total_supply if circulating and total_supply else None,
+                'tokens_staked': total_supply - circulating if circulating and total_supply else None,
+                'assets_staked_on_chain': (total_supply - circulating) * price if total_supply and price and circulating else None
+            }
+
+            token_data["timestampz"] = (
+                datetime.datetime.utcnow()
+                .replace(tzinfo=datetime.timezone.utc)
+                .isoformat()
+            )
+
+            all_coins_list.append(token_data)
+            logging.info(token_data)
             
     return all_coins_list
+
+def get_empty_coin_data(coin):
+    coin_data = {}
+    coin_data['token'] = coin
+    coin_data["timestampz"] = (
+        datetime.datetime.utcnow()
+        .replace(tzinfo=datetime.timezone.utc)
+        .isoformat()
+    )
+    coin_data['circulating_supply'] = None
+    coin_data['circulating_supply_percentage'] = None
+    coin_data['tokens_staked'] = None
+    coin_data['assets_staked_on_chain'] = None
+    
+    return coin_data
 
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -91,8 +107,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         logging.info('The timer is past due!')
 
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
-
-    metrics = []
 
     r = get_all_metrics()
             
@@ -106,6 +120,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     
     #preparing upload
     messages = {}
+    missing_messages = {}
 
     for topic in df_dict.keys():
         messages[topic] = [
@@ -120,6 +135,21 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is not None
         ]
 
+    for topic in df_dict.keys():
+        missing_messages[topic] = [
+            {
+                "token": k,
+                "value": v,
+                "timestampz": update_time["timestampz"][k],
+                "source": "Messari",
+                # "GUID_functions": context.invocation_id,
+            }
+            for k, v in df_dict[topic].items()
+            if v is None
+        ]
+
+    with open('log/missing/messari.json', 'w') as f:
+         f.write(json.dumps(missing_messages))
+
     c = msg.set(json.dumps(messages))
-    logging.info(c)
-    return c
+    
