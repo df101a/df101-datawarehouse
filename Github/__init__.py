@@ -9,6 +9,15 @@ import azure.functions as func
 from collections.abc import MutableMapping
 import pandas as pd
 import time
+from src.kafka_producer import Df101KafkaProducer
+
+def publish_to_kafka(messages: dict):
+     kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
+     for key in messages.keys():
+        topic_name = key
+        logging.info(topic_name)
+        for coin in messages[key]:
+            kfk_prod.send(topic=topic_name, message=coin)
 
 def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     if len(d.keys()) == 0:
@@ -170,6 +179,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is not None
         ]
         
+    publish_to_kafka(messages)
+
     for topic in df_dict.keys():
         missing_messages[topic] = [
             {
