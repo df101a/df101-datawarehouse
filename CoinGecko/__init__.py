@@ -78,7 +78,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             coin_data['fully_diluted_valuation'] = data['market_data.fully_diluted_valuation.usd'] if 'market_data.fully_diluted_valuation.usd' in data.keys() else None
             coin_data['max_supply'] = data['market_data.max_supply'] if 'market_data.max_supply' in data.keys() else None
             coin_data['fully_diluted_valuation_calculated'] = int(coin_data['max_supply']) * coin_data['current_price_usd'] if coin_data['current_price_usd'] and  coin_data['max_supply'] else None
-            coin_data['total_volume'] = data['market_data.total_volume'] if 'market_data.total_volume' in data.keys() else None
+            coin_data['total_volume'] = data['market_data.total_volume.usd'] if 'market_data.total_volume' in data.keys() else None
             coin_data['all_time_high'] = data['market_data.ath'] if 'market_data.ath' in data.keys() else None
             coin_data['repos_url'] = data['links.repos_url.github'] if 'links.repos_url.github' in data.keys() else None
             coin_data['subreddit_url'] = data['links.subreddit_url'] if 'links.subreddit_url' in data.keys() else None
