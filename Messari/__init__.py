@@ -148,7 +148,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is None
         ]
 
-    with open('log/missing/messari.json', 'w') as f:
+    with open('function_logs/missing/messari.json', 'w') as f:
          f.write(json.dumps(missing_messages))
 
     c = msg.set(json.dumps(messages))
