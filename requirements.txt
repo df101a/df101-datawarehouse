@@ -6,3 +6,4 @@ azure-functions
 numpy
 pandas
 requests
+kafka-python

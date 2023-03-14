@@ -33,6 +33,6 @@ class Df101KafkaProducer:
 
         try:
             record_metadata = future.get(timeout=30)
-            print("Succesfully wrote message: "+ record_metadata)
+            print("Succesfully wrote message: "+ str(record_metadata))
         except KafkaError as e:
             print(e)
