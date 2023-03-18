@@ -10,6 +10,7 @@ from collections.abc import MutableMapping
 import pandas as pd
 from src.kafka_producer import Df101KafkaProducer
 
+
 def publish_to_kafka(messages: dict):
      kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
      for key in messages.keys():
@@ -36,7 +37,13 @@ def get_all_data(token_id, cmc_id):
         logging.error(f"Encountered an exception when fetching Coin Market Cap data for token {token_id} -- {str(e)}")
         res = {}
 
-    return flatten_dict(dict(res))
+    res = flatten_dict(dict(res))
+    
+    with open('function_logs/datapoints/cmc.txt', 'w') as f:
+        for key in res.keys():
+            f.write(f"{key}\n")
+       
+    return res
 
 def get_empty_coin_data(coin):
     coin_data = {}
@@ -57,7 +64,7 @@ def get_empty_coin_data(coin):
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
-
+    DUMP_DATAPOINTS = True
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
