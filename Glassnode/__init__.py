@@ -114,7 +114,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
-    #publish_to_kafka(messages)
+    publish_to_kafka(messages)
     for topic in df_dict.keys():
         missing_messages[topic] = [
             {
@@ -128,7 +128,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is None
         ]
 
-    with open('function_logs/missing/cg.json', 'w') as f:
+    with open('function_logs/missing/glassnode.json', 'w') as f:
          f.write(json.dumps(missing_messages))
          
     c = msg.set(json.dumps(messages))
