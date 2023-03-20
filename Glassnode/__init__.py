@@ -18,26 +18,29 @@ def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
     return flat_dict
 
-def get_all_data():
+def get_all_data(token_id):
     try:
         res = requests.get(
-                    url=f"https://api.llama.fi/chains"
-                ).json()
+            url='https://api.glassnode.com/v1/metrics/market/price_drawdown_relative',
+            params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+            ).json()
     except Exception as e:
-        logging.error(f"Encountered an exception when fetching Coin Gecko data for token")
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}")
         res = {}
-    
-    a = {}
-    for item in res:
-        logging.info(item)
-        a[item['tokenSymbol']] = item
 
-    res = flatten_dict(dict(a))
-    with open('function_logs/datapoints/defilama.txt', 'w') as f:
-        for key in res.keys():
-            f.write(f"{key}\n")
- 
-    return res
+    drop_from_ath = None
+    if res != {}:
+        drop_from_ath = res[-1]['v']
+    
+    data = {
+        str(token_id): {
+        'drop_from_ath': drop_from_ath
+        }
+    }
+
+    data = flatten_dict(dict(data))
+
+    return data
 
 def get_empty_coin_data(coin):
     pass
@@ -55,7 +58,7 @@ def publish_to_kafka(messages: dict):
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
-
+    DUMP_DATAPOINTS = True
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
@@ -64,33 +67,28 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     with open('tokens.json', 'r') as f:
                 tokens = json.load(f)
 
-    data = get_all_data()
     all_coin_data = []
     for token in tokens.keys():
-        if tokens[token]["cg_id"]:
-            logging.info(f"Fetching DefiLama data for token {token}")
-            coin_data = {}
-            coin_data["token"] = token
-            defilama_id = tokens[token]["defilama_symbol"]
-            
-            if data == {}:
-                all_coin_data.append(get_empty_coin_data(token))
-                continue
-            
-            if f"{str(defilama_id)}.tvl" in data.keys():
-                coin_data['TVL'] = data[f"{str(defilama_id)}.tvl"]
-            else:
-                coin_data['TVL'] = None
+        
+        coin_data = {}  
+        coin_data["token"] = token
+          
+        data = get_all_data(token)
+        coin_data['drop_from_ath'] = data[f"{token}.drop_from_ath"]
+        if data == {}:
+            all_coin_data.append(get_empty_coin_data(token))
+            continue
+        
 
-            coin_data["timestampz"] = (
-                datetime.datetime.utcnow()
-                .replace(tzinfo=datetime.timezone.utc)
-                .isoformat()
-            )
-            
-            all_coin_data.append(coin_data)
-            logging.info(coin_data)
-            time.sleep(4)
+        coin_data["timestampz"] = (
+            datetime.datetime.utcnow()
+            .replace(tzinfo=datetime.timezone.utc)
+            .isoformat()
+        )
+        
+        all_coin_data.append(coin_data)
+        logging.info(coin_data)
+        time.sleep(4)
             
     #Formatting all responses    
     df = pd.DataFrame(all_coin_data)  # dataframing because this is easier
@@ -110,27 +108,27 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "DefiLama",
+                "source": "CoinGecko",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
             if v is not None
         ]
-    publish_to_kafka(messages)
+    #publish_to_kafka(messages)
     for topic in df_dict.keys():
         missing_messages[topic] = [
             {
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "DefiLama",
+                "source": "Coin_Gecko",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
             if v is None
         ]
 
-    with open('function_logs/missing/defilama.json', 'w') as f:
+    with open('function_logs/missing/cg.json', 'w') as f:
          f.write(json.dumps(missing_messages))
          
     c = msg.set(json.dumps(messages))

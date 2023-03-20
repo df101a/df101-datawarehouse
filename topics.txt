@@ -1,0 +1,42 @@
+capitalization token
+trading volume -- CG, CMC
+tvl -- DefiLama
+market capitalization full diluted --- CG, CMC
+market capitalization / tvl 
+current price  --- CG, CMC 
+drop from ath -- Glassnode
+upside from ath
+max supply --- CG, CMC 
+total supply --- CG, CMC 
+tokens staked -- Messari 
+tokens staked % 
+circulation supply % -- Messari
+gas fee 
+traded demand / circulation supply 
+wallets 
+tvl / wallets 
+unbonding period, days 
+staking apr (as validator)
+Inflation rate annual 
+validators active 
+validators total 
+nominators 
+twitter --- CG
+telegeram --- (Skipped)
+reddit --- CG 
+github link --- CG 
+github commits -- Github
+average commits per week  -- Github
+github contributors  -- Github
+github forks  -- Github
+github watchers  -- Github
+github stars  -- Github
+merged pull requests  -- Github
+open issues  -- Github
+closed issues  -- Github
+commit speed per contributor (Skipped)
+capitalization / contributor (Skipped)
+security score --- (Skipped)
+certik score --- (Skipped)
+hack cases --- (Skipped)
+new vacancies on corp site and on Linkedin --- (Skipped) 
