@@ -18,42 +18,29 @@ def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
     return flat_dict
 
-def get_all_data(token_id, cg_id):
+def get_all_data():
     try:
         res = requests.get(
-                    url=f"https://api.coingecko.com/api/v3/coins/{cg_id}"
+                    url=f"https://api.llama.fi/chains"
                 ).json()
     except Exception as e:
-        logging.error(f"Encountered an exception when fetching Coin Gecko data for token {token_id}")
+        logging.error(f"Encountered an exception when fetching Coin Gecko data for token")
         res = {}
     
-    res = flatten_dict(dict(res))
-    with open('function_logs/datapoints/cg.txt', 'w') as f:
+    a = {}
+    for item in res:
+        logging.info(item)
+        a[item['tokenSymbol']] = item
+
+    res = flatten_dict(dict(a))
+    with open('function_logs/datapoints/defilama.txt', 'w') as f:
         for key in res.keys():
             f.write(f"{key}\n")
-
+ 
     return res
 
 def get_empty_coin_data(coin):
-    coin_data = {}
-    coin_data['token'] = coin
-    coin_data["timestampz"] = (
-        datetime.datetime.utcnow()
-        .replace(tzinfo=datetime.timezone.utc)
-        .isoformat()
-    )
-    coin_data['current_price_usd'] = None
-    coin_data['total_supply'] = None
-    coin_data['fully_diluted_valuation'] = None
-    coin_data['max_supply'] = None
-    coin_data['fully_diluted_valuation_calculated'] = None
-    coin_data['total_volume'] = None
-    coin_data['all_time_high'] = None
-    coin_data['repos_url'] = None
-    coin_data['subreddit_url'] = None
-    coin_data['twitter_screen_name'] = None
-    
-    return coin_data
+    pass
 
 def publish_to_kafka(messages: dict):
      kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
@@ -68,7 +55,7 @@ def publish_to_kafka(messages: dict):
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
-    DUMP_DATAPOINTS = True
+
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
@@ -77,31 +64,23 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     with open('tokens.json', 'r') as f:
                 tokens = json.load(f)
 
+    data = get_all_data()
     all_coin_data = []
     for token in tokens.keys():
         if tokens[token]["cg_id"]:
-            logging.info(f"Fetching CoinGecko data for token {token}")
+            logging.info(f"Fetching DefiLama data for token {token}")
             coin_data = {}
             coin_data["token"] = token
-            cg_id = tokens[token]["cg_id"]
+            defilama_id = tokens[token]["defilama_symbol"]
             
-            data = get_all_data(token_id=token, cg_id=cg_id)
-
             if data == {}:
                 all_coin_data.append(get_empty_coin_data(token))
                 continue
             
-            coin_data['current_price_usd'] = data['market_data.current_price.usd'] if 'market_data.current_price.usd' in data.keys() else None
-            coin_data['total_supply'] = data['market_data.total_supply'] if 'market_data.total_supply' in data.keys() else None
-            coin_data['fully_diluted_valuation'] = data['market_data.fully_diluted_valuation.usd'] if 'market_data.fully_diluted_valuation.usd' in data.keys() else None
-            coin_data['max_supply'] = data['market_data.max_supply'] if 'market_data.max_supply' in data.keys() else None
-            coin_data['fully_diluted_valuation_calculated'] = int(coin_data['max_supply']) * coin_data['current_price_usd'] if coin_data['current_price_usd'] and  coin_data['max_supply'] else None
-            coin_data['total_volume'] = data['market_data.total_volume.usd'] if 'market_data.total_volume.usd' in data.keys() else None
-            coin_data['all_time_high'] = data['market_data.ath.usd'] if 'market_data.ath.usd' in data.keys() else None
-            coin_data['repos_url'] = data['links.repos_url.github'] if 'links.repos_url.github' in data.keys() else None
-            coin_data['subreddit_url'] = data['links.subreddit_url'] if 'links.subreddit_url' in data.keys() else None
-            coin_data['twitter_screen_name'] = data['links.twitter_screen_name'] if 'links.twitter_screen_name' in data.keys() else None
-
+            if f"{str(defilama_id)}.tvl" in data.keys():
+                coin_data['TVL'] = data[f"{str(defilama_id)}.tvl"]
+            else:
+                coin_data['TVL'] = None
 
             coin_data["timestampz"] = (
                 datetime.datetime.utcnow()
@@ -131,7 +110,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "CoinGecko",
+                "source": "DefiLama",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
@@ -144,14 +123,14 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "Coin_Gecko",
+                "source": "DefiLama",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
             if v is None
         ]
 
-    with open('function_logs/missing/cg.json', 'w') as f:
+    with open('function_logs/missing/defilama.json', 'w') as f:
          f.write(json.dumps(missing_messages))
          
     c = msg.set(json.dumps(messages))

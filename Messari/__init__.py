@@ -49,7 +49,15 @@ def get_all_data(token_id, cg_id, messari_symbol):
     except Exception as ex:
         logging.error(f'Encountered an error when fetching Messari data -- {str(ex)}')
     time.sleep(4)
-    return flatten_dict(data)
+    
+    res = flatten_dict(data)
+    
+    with open('function_logs/datapoints/messari.txt', 'w') as f:
+        for key in res.keys():
+            f.write(f"{key}\n")
+       
+
+    return res
 
 def get_all_metrics():
     #all_coins={}
@@ -112,6 +120,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
     
+    DUMP_DATAPOINTS = True
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
