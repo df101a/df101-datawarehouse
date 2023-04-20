@@ -10,6 +10,11 @@ from collections.abc import MutableMapping
 import pandas as pd
 import time
 from src.kafka_producer import Df101KafkaProducer
+from jsonschema import validate
+import json
+
+with open('schema.json', 'r') as file:
+    schema = json.load(file)
 
 def publish_to_kafka(messages: dict):
      kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
@@ -38,6 +43,7 @@ def call_github_endpoint(url, topic=None, token_id=None):
     return data
 
 def get_all_data(token_id: str, repo_name: str):
+    time.sleep(10)
     data = {
         'basic': None,
         'contributor': None,
@@ -147,8 +153,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         coin_data['github_merged_pull_requests'] = data['mergedpullrequests.total_count'] if 'mergedpullrequests.total_count' in data.keys() else None
         coin_data['github_open_issues'] = data['openissues.total_count'] if 'openissues.total_count' in data.keys() else None
         coin_data['github_closed_issues'] = data['closedissues.total_count'] if 'closedissues.total_count' in data.keys() else None
-        coin_data['github_commit_speed_per_contributor'] = None #TODO
-        coin_data['github_capitalization_contributors'] = None #TODO
+        # coin_data['github_commit_speed_per_contributor'] = None
+        # coin_data['github_capitalization_contributors'] = None 
         token_data.append(coin_data)
         logging.info(coin_data)
         time.sleep(2)
@@ -178,7 +184,12 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
-        
+    for k,v in messages.items():
+        for m in v:
+            try:
+                validate(m, schema)
+            except:
+                ("Wrongly formatted schema found:" +m)
     publish_to_kafka(messages)
 
     for topic in df_dict.keys():
@@ -193,8 +204,5 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is None
         ]
-
-    with open('function_logs/missing/github.json', 'w') as f:
-         f.write(json.dumps(missing_messages))
         
     msg.set(json.dumps(messages))

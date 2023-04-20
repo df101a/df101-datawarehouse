@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "properties": {
+        "token" :       {"type" : "string"},
+        "value" :       {"type" : "number"},
+        "timestampz" :  {"type" : "string"},
+        "source" :      {"type" : "string"}
+    },
+    "required": ["token", "value", "timestampz", "source"]
+}

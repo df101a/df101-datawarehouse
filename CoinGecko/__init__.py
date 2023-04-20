@@ -8,9 +8,14 @@ import numpy as np
 import azure.functions as func
 from collections.abc import MutableMapping
 import pandas as pd
-import time
 import os
 from src.kafka_producer import Df101KafkaProducer
+from jsonschema import validate
+
+with open('schema.json', 'r') as file:
+    schema = json.load(file)
+
+
 
 def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     if len(d.keys()) == 0:
@@ -19,6 +24,7 @@ def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     return flat_dict
 
 def get_all_data(token_id, cg_id):
+    time.sleep(10)
     try:
         res = requests.get(
                     url=f"https://api.coingecko.com/api/v3/coins/{cg_id}"
@@ -102,7 +108,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             coin_data['subreddit_url'] = data['links.subreddit_url'] if 'links.subreddit_url' in data.keys() else None
             coin_data['twitter_screen_name'] = data['links.twitter_screen_name'] if 'links.twitter_screen_name' in data.keys() else None
 
-
             coin_data["timestampz"] = (
                 datetime.datetime.utcnow()
                 .replace(tzinfo=datetime.timezone.utc)
@@ -137,6 +142,15 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
+    
+  
+    for k,v in messages.items():
+        for m in v:
+            try:
+                validate(m, schema)
+            except:
+                ("Wrongly formatted schema found:" +m)
+    
     publish_to_kafka(messages)
     for topic in df_dict.keys():
         missing_messages[topic] = [
@@ -150,9 +164,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is None
         ]
-
-    with open('function_logs/missing/cg.json', 'w') as f:
-         f.write(json.dumps(missing_messages))
          
     c = msg.set(json.dumps(messages))
     logging.info(c)

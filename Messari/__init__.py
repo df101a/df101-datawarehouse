@@ -10,6 +10,11 @@ import azure.functions as func
 from collections.abc import MutableMapping
 import pandas as pd
 from src.kafka_producer import Df101KafkaProducer
+from jsonschema import validate
+import json
+
+with open('schema.json', 'r') as file:
+    schema = json.load(file)
 
 def publish_to_kafka(messages: dict):
      kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
@@ -36,7 +41,7 @@ def get_all_data(token_id, cg_id, messari_symbol):
         cg_data.raise_for_status()
         data['cg'] = dict(cg_data.json())
     except Exception as ex:
-        logging.error(f'Encountered an error when fetching data from CoinGecko for token {token_id} -- {str(ex)}')
+        logging.error(f'Encountered an error when fetching data from Messari for token {token_id} -- {str(ex)}')
 
     try:
         token = os.environ.get("messari-api-key")
@@ -66,6 +71,7 @@ def get_all_metrics():
         coins = json.load(f)
         
         for coin_key in coins.keys():
+            time.sleep(10)
             logging.info(f"Fetching Messari data for token {coin_key}")
             messari_symbol = coins[coin_key]['messari_symbol']
             cg_id = coins[coin_key]['cg_id']
@@ -152,7 +158,13 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
-
+    
+    for k,v in messages.items():
+        for m in v:
+            try:
+                validate(m, schema)
+            except:
+                ("Wrongly formatted schema found:" +m)
     publish_to_kafka(messages)
 
     for topic in df_dict.keys():
@@ -167,9 +179,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is None
         ]
-
-    with open('function_logs/missing/messari.json', 'w') as f:
-         f.write(json.dumps(missing_messages))
 
     c = msg.set(json.dumps(messages))
     

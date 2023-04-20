@@ -9,6 +9,11 @@ import azure.functions as func
 from collections.abc import MutableMapping
 import pandas as pd
 from src.kafka_producer import Df101KafkaProducer
+from jsonschema import validate
+import json
+
+with open('schema.json', 'r') as file:
+    schema = json.load(file)
 
 
 def publish_to_kafka(messages: dict):
@@ -126,6 +131,13 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
+      
+    for k,v in messages.items():
+        for m in v:
+            try:
+                validate(m, schema)
+            except:
+                ("Wrongly formatted schema found:" +m)
 
     publish_to_kafka(messages)
     

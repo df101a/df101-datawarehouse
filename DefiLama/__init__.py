@@ -11,6 +11,11 @@ import pandas as pd
 import time
 import os
 from src.kafka_producer import Df101KafkaProducer
+from jsonschema import validate
+import json
+
+with open('schema.json', 'r') as file:
+    schema = json.load(file)
 
 def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     if len(d.keys()) == 0:
@@ -24,7 +29,7 @@ def get_all_data():
                     url=f"https://api.llama.fi/chains"
                 ).json()
     except Exception as e:
-        logging.error(f"Encountered an exception when fetching Coin Gecko data for token")
+        logging.error(f"Encountered an exception when fetching DefiLama token data: \n" + e )
         res = {}
     
     a = {}
@@ -67,6 +72,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     data = get_all_data()
     all_coin_data = []
     for token in tokens.keys():
+        time.sleep(10)
         if tokens[token]["cg_id"]:
             logging.info(f"Fetching DefiLama data for token {token}")
             coin_data = {}
@@ -116,7 +122,15 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             for k, v in df_dict[topic].items()
             if v is not None
         ]
+        
+    for k,v in messages.items():
+        for m in v:
+            try:
+                validate(m, schema)
+            except:
+                ("Wrongly formatted schema found:" +m)
     publish_to_kafka(messages)
+    
     for topic in df_dict.keys():
         missing_messages[topic] = [
             {
@@ -130,8 +144,6 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             if v is None
         ]
 
-    with open('function_logs/missing/defilama.json', 'w') as f:
-         f.write(json.dumps(missing_messages))
          
     c = msg.set(json.dumps(messages))
     logging.info(c)
