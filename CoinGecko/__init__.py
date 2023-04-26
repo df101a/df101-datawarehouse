@@ -58,7 +58,8 @@ def get_empty_coin_data(coin):
     coin_data['repos_url'] = None
     coin_data['subreddit_url'] = None
     coin_data['twitter_screen_name'] = None
-    
+    coin_data['telegram_channel_identifier'] = None
+    coin_data['github_contributors'] = None
     return coin_data
 
 def publish_to_kafka(messages: dict):
@@ -107,6 +108,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             coin_data['repos_url'] = data['links.repos_url.github'] if 'links.repos_url.github' in data.keys() else None
             coin_data['subreddit_url'] = data['links.subreddit_url'] if 'links.subreddit_url' in data.keys() else None
             coin_data['twitter_screen_name'] = data['links.twitter_screen_name'] if 'links.twitter_screen_name' in data.keys() else None
+            coin_data['telegram_channel_identifier'] = data['links.telegram_channel_identifier'] if 'links.telegram_channel_identifier' in data.keys() else None
+            coin_data['github_contributors'] = data['developer_data.pull_request_contributors'] if 'developer_data.pull_request_contributors' in data.keys() else None
 
             coin_data["timestampz"] = (
                 datetime.datetime.utcnow()
@@ -158,7 +161,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "Coin_Gecko",
+                "source": "CoinGecko",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()

@@ -1,0 +1,8 @@
+status
+message
+result.LastBlock
+result.SafeGasPrice
+result.ProposeGasPrice
+result.FastGasPrice
+result.suggestBaseFee
+result.gasUsedRatio

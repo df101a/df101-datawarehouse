@@ -7,3 +7,4 @@ numpy
 pandas
 requests
 kafka-python
+jsonschema

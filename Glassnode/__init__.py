@@ -22,22 +22,79 @@ def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     return flat_dict
 
 def get_all_data(token_id):
+    drop_from_ath = None
+    active_validators_cnt = None
+    inflation_rate = None 
+    wallet_count = None 
+    gas_price_mean = None
+    logging.info(os.environ.get('glassnode-api-key'))
     try:
         res = requests.get(
-            url='https://api.glassnode.com/v1/metrics/market/price_drawdown_relative',
-            params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+                url='https://api.glassnode.com/v1/metrics/market/price_drawdown_relative',
+                params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
             ).json()
+        
+        if res != {}:
+            drop_from_ath = res[-1]['v']
     except Exception as e:
-        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
         res = {}
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
 
-    drop_from_ath = None
-    if res != {}:
-        drop_from_ath = res[-1]['v']
+
+    try:   
+        res = requests.get(
+                url="https://api.glassnode.com/v1/metrics/eth2/active_validators_count",
+                params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+            ).json()
+        if res != {}:
+            active_validators_cnt = res[-1]['v']
+    except Exception as e:
+        res = {}
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
     
+    try:
+        res = requests.get(
+                url="https://api.glassnode.com/v1/metrics/supply/inflation_rate",
+                params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+            ).json()
+        if res != {}:
+            inflation_rate = res[-1]['v']
+    except Exception as e:
+        res = {}
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
+        
+
+    try:   
+        res = requests.get(
+                url="https://api.glassnode.com/v1/metrics/addresses/count",
+                params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+            ).json()
+        if res != {}:
+            wallet_count = res[-1]['v']
+    except Exception as e:
+        res = {}
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
+        
+
+    try:   
+        res = requests.get(
+                url="https://api.glassnode.com/v1/metrics/fees/gas_price_mean",
+                params={'a': token_id, 'api_key': os.environ.get('glassnode-api-key')}
+            ).json()
+        if res != {}:
+            gas_price_mean = res[-1]['v']
+    except Exception as e:
+        res = {}
+        logging.error(f"Encountered an exception when fetching Glassnode data for token {token_id}: \n" + str(e) + "HTTP Result: \n" + str(res))
+        
+
     data = {
         str(token_id): {
-        'drop_from_ath': drop_from_ath
+        'drop_from_ath': drop_from_ath,
+        'active_validators_count': active_validators_cnt,
+        'inflation_rate': inflation_rate,
+        'wallet_count': wallet_count,
+        'gas_price_mean': gas_price_mean
         }
     }
 
@@ -79,6 +136,10 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
           
         data = get_all_data(token)
         coin_data['drop_from_ath'] = data[f"{token}.drop_from_ath"]
+        coin_data['active_validators_count'] = data[f"{token}.active_validators_count"]
+        coin_data['inflation_rate'] = data[f"{token}.inflation_rate"]
+        coin_data['gas_price_mean'] = data[f"{token}.gas_price_mean"]
+
         if data == {}:
             all_coin_data.append(get_empty_coin_data(token))
             continue
@@ -112,7 +173,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "CoinGecko",
+                "source": "Glassnode",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
@@ -133,7 +194,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
                 "token": k,
                 "value": v,
                 "timestampz": update_time["timestampz"][k],
-                "source": "Coin_Gecko",
+                "source": "Glassnode",
                 # "GUID_functions": context.invocation_id,
             }
             for k, v in df_dict[topic].items()
