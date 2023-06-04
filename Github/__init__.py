@@ -12,100 +12,44 @@ import time
 from src.kafka_producer import Df101KafkaProducer
 from jsonschema import validate
 import json
+from src.utils import write_message_to_json, flatten_dict, get, format_response, publish_to_kafka, get_empty_coin_data, populate_coin_data
 
-with open('schema.json', 'r') as file:
-    schema = json.load(file)
+from src.schemas import github_schema
+from src.key_mappings import github_map
+#with open('schema.json', 'r') as file:
+#    schema = json.load(file)
 
-def publish_to_kafka(messages: dict):
-     kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
-     for key in messages.keys():
-        topic_name = key
-        logging.info(topic_name)
-        for coin in messages[key]:
-            kfk_prod.send(topic=topic_name, message=coin)
 
-def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
-    if len(d.keys()) == 0:
-        return {}
-    [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
-    return flat_dict
-
-def call_github_endpoint(url, topic=None, token_id=None):
+def prepare_data(repo_name: str):
     access_token = os.environ.get("github-access-token") # WILL EXPIRE IN MARCH 2024
     headers = {"Authorization": f"Bearer {access_token}"}
-    data = None
+    
+    data_points = [
+        'basic',
+        'contributors',
+        'commits',
+        'openissues',
+        'closedissues',
+        'mergedpullrequests'
+    ]
 
-    try:
-        data = requests.get(url, headers=headers).json()
-    except Exception as ex:
-        logging.error(f"Encountered an error when fetching github's {topic} for token {token_id}")
-        
-    return data
+    endpoints = [
+        f"https://api.github.com/repos/{repo_name}", 
+        f"https://api.github.com/repos/{repo_name}/contributors",
+        f"https://api.github.com/repos/{repo_name}/stats/participation",
+        f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1",
+        f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1",
+        f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1"
+    ]
 
-def get_all_data(token_id: str, repo_name: str):
-    time.sleep(10)
-    data = {
-        'basic': None,
-        'contributor': None,
-        'commits': None,
-        'openissues': None,
-        'closedissues': None,
-        'mergedpullrequests': None
-    }
-
-    data['basic'] = call_github_endpoint(
-        url=f"https://api.github.com/repos/{repo_name}",
-        topic='basic data',
-        token_id=token_id
-    )
-    data['contributor'] = call_github_endpoint(
-        url=f"https://api.github.com/repos/{repo_name}/contributors",
-        topic='contributor data',
-        token_id=token_id
-    )
-    data['commits'] = call_github_endpoint(
-        url=f"https://api.github.com/repos/{repo_name}/stats/participation",
-        topic='commit data',
-        token_id=token_id
-    )
-    data['openissues'] = call_github_endpoint(
-        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:open&page=0&per_page=1",
-        topic='open issue data',
-        token_id=token_id
-    )
-    data['closedissues'] = call_github_endpoint(
-        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:issue+state:closed&page=0&per_page=1",
-        topic='closed issues data',
-        token_id=token_id
-    )
-    data['mergedpullrequests'] = call_github_endpoint(
-        url=f"https://api.github.com/search/issues?q=repo:{repo_name}+type:pr+is:merged&page=0&per_page=1",
-        topic='merged pull request data',
-        token_id=token_id
-    )
+    idx=0
+    data = {}
+    for endpoint in endpoints:
+        data[data_points[idx]] = get(url=endpoint, headers=headers)
+        idx+=1
 
     return flatten_dict(data)
 
-def get_empty_coin_data(coin):
-    coin_data = {}
-    coin_data['token'] = coin
-    coin_data["timestampz"] = (
-        datetime.datetime.utcnow()
-        .replace(tzinfo=datetime.timezone.utc)
-        .isoformat()
-    )
-    coin_data['github_commits'] = None
-    coin_data['github_average_commits_per_week'] = None
-    coin_data['github_contributors'] = None
-    coin_data['github_forks'] = None
-    coin_data['github_watchers'] = None
-    coin_data['github_stars'] =  None
-    coin_data['github_merged_pull_requests'] = None
-    coin_data['github_open_issues'] = None
-    coin_data['github_closed_issues'] = None
-    coin_data['github_commit_speed_per_contributor'] = None 
-    coin_data['github_capitalization_contributors'] = None 
-    return coin_data
 
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -117,92 +61,41 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
         
     with open('tokens.json', 'r') as f:
-        tokens = json.load(f)
+        coins = json.load(f)
             
-    token_data = []
+    integration_name = 'Github'
+    all_coin_data = []
     
-    for coin in tokens.keys():
-        coin_data = {}
+    for coin in coins.keys():
         logging.info(f"Fetching github data for token {coin}")
-        coin_data['token'] = coin
-        repo_address = tokens[coin]['github_repo'].replace('http://api.github.com/repos/','')
-
-        if repo_address == '':
-            logging.error(f"Missing repository for token {coin}")
-            token_data.append(get_empty_coin_data(coin))
-            continue
         
-        data = get_all_data(coin, repo_address)
+        repo_address = coins[coin]['github_repo'].replace('http://api.github.com/repos/','')
 
-        if data is None:
-            token_data.append(get_empty_coin_data(coin))
-            continue
+        coin_data = get_empty_coin_data(coin=coin, schema=github_schema)
+        
+        data = prepare_data(repo_address)
 
-        ## Github Data
-        coin_data["timestampz"] = (
-            datetime.datetime.utcnow()
-            .replace(tzinfo=datetime.timezone.utc)
-            .isoformat()
-        )
+        coin_data = populate_coin_data(coin_data=coin_data, api_data=data, key_mapping=github_map)
+
+        # Calculated columns
         coin_data['github_commits'] = sum(data['commits.all']) if 'commits.all' in data.keys() and data['commits.all'] else None
         coin_data['github_average_commits_per_week'] = sum(data['commits.all']) / len(data['commits.all']) if 'commits.all' in data.keys() and data['commits.all'] else None
         coin_data['github_contributors'] = len(data['contributors']) if 'contributors' in data.keys() and data['contributors'] else None
-        coin_data['github_forks'] = data['basic.forks_count'] if 'basic.forks_count' in data.keys() else None
-        coin_data['github_watchers'] = data['basic.subscribers_count'] if 'basic.subscribers_count' in data.keys() else None
-        coin_data['github_stars'] = data['basic.stargazers_count'] if 'basic.stargazers_count' in data.keys() else None
-        coin_data['github_merged_pull_requests'] = data['mergedpullrequests.total_count'] if 'mergedpullrequests.total_count' in data.keys() else None
-        coin_data['github_open_issues'] = data['openissues.total_count'] if 'openissues.total_count' in data.keys() else None
-        coin_data['github_closed_issues'] = data['closedissues.total_count'] if 'closedissues.total_count' in data.keys() else None
-        # coin_data['github_commit_speed_per_contributor'] = None
-        # coin_data['github_capitalization_contributors'] = None 
-        token_data.append(coin_data)
-        logging.info(coin_data)
-        time.sleep(2)
+
+        all_coin_data.append(coin_data.copy())
+        logging.info(f"Fetching token data for {coin} from {integration_name}...({len(all_coin_data)}/{len(coins.keys())})")
         
-    #Formatting all responses    
-    df = pd.DataFrame(token_data)  # dataframing because this is easier
-    df.set_index("token", inplace=True)
-    update_time = df[["timestampz"]].to_dict()
-    df.drop(columns=["timestampz"], inplace=True)
-    df.replace(np.nan, None, inplace=True)
-    df.replace('N/A', None, inplace=True)
-    df_dict = df.to_dict()
-
-    #preparing upload
-    messages = {}
-    missing_messages = {}
-
-    for topic in df_dict.keys():
-        messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "GitHub",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is not None
-        ]
-    for k,v in messages.items():
-        for m in v:
-            try:
-                validate(m, schema)
-            except:
-                ("Wrongly formatted schema found:" +m)
-    publish_to_kafka(messages)
-
-    for topic in df_dict.keys():
-        missing_messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "Github",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is None
-        ]
+        time.sleep(10)
         
+    messages, missing_messages = format_response(all_coin_data, integration_name)
+    #for k,v in messages.items():
+    #    for m in v:
+    #        try:
+    #            validate(m, schema)
+    #        except:
+    #            ("Wrongly formatted schema found:" +m)
+    
+    write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
+    write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
+
     msg.set(json.dumps(messages))

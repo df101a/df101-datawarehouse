@@ -13,49 +13,23 @@ import os
 from src.kafka_producer import Df101KafkaProducer
 from jsonschema import validate
 import json
+from src.utils import write_message_to_json, flatten_dict, get, format_response, publish_to_kafka, get_empty_coin_data, populate_coin_data
 
-with open('schema.json', 'r') as file:
-    schema = json.load(file)
+from src.schemas import defilama_schema
+from src.key_mappings import defilama_map
 
-def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
-    if len(d.keys()) == 0:
-        return {}
-    [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
-    return flat_dict
+#with open('schema.json', 'r') as file:
+#    schema = json.load(file)
 
-def get_all_data():
-    try:
-        res = requests.get(
-                    url=f"https://api.llama.fi/chains"
-                ).json()
-    except Exception as e:
-        logging.error(f"Encountered an exception when fetching DefiLama token data: \n" + e )
-        res = {}
+
+def prepare_data():
+    res = get(url=f"https://api.llama.fi/chains")
     
     a = {}
     for item in res:
-        logging.info(item)
         a[item['tokenSymbol']] = item
-
-    res = flatten_dict(dict(a))
-    with open('function_logs/datapoints/defilama.txt', 'w') as f:
-        for key in res.keys():
-            f.write(f"{key}\n")
  
-    return res
-
-def get_empty_coin_data(coin):
-    pass
-
-def publish_to_kafka(messages: dict):
-     kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
-     for key in messages.keys():
-        topic_name = key
-        logging.info(topic_name)
-        for coin in messages[key]:
-            kfk_prod.send(topic=topic_name, message=coin)
-             
-             
+    return a
 
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -67,86 +41,46 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
         
     with open('tokens.json', 'r') as f:
-                tokens = json.load(f)
+        coins = json.load(f)
 
-    data = get_all_data()
+    integration_id = 'defilama_symbol'
+    integration_name = 'DefiLama'
+
+    data = prepare_data()
+    
     all_coin_data = []
-    for token in tokens.keys():
-        time.sleep(10)
-        if tokens[token]["cg_id"]:
-            logging.info(f"Fetching DefiLama data for token {token}")
-            coin_data = {}
-            coin_data["token"] = token
-            defilama_id = tokens[token]["defilama_symbol"]
-            
-            if data == {}:
-                all_coin_data.append(get_empty_coin_data(token))
-                continue
-            
-            if f"{str(defilama_id)}.tvl" in data.keys():
-                coin_data['TVL'] = data[f"{str(defilama_id)}.tvl"]
-            else:
-                coin_data['TVL'] = None
 
-            coin_data["timestampz"] = (
-                datetime.datetime.utcnow()
-                .replace(tzinfo=datetime.timezone.utc)
-                .isoformat()
+    for coin in coins.keys():
+        if coins[coin]["cg_id"]:
+            logging.info(f"Fetching DefiLama data for token {coin}")
+            
+            coin_data = get_empty_coin_data(coin=coin, schema=defilama_schema)
+
+            defilama_id = coins[coin][integration_id]
+
+            coin_data = populate_coin_data(
+                coin_data=coin_data, 
+                api_data=data[coin] if coin in data.keys() else {},
+                key_mapping=defilama_map
             )
-            
-            all_coin_data.append(coin_data)
-            logging.info(coin_data)
-            time.sleep(4)
-            
-    #Formatting all responses    
-    df = pd.DataFrame(all_coin_data)  # dataframing because this is easier
-    df.set_index("token", inplace=True)
-    update_time = df[["timestampz"]].to_dict()
-    df.drop(columns=["timestampz"], inplace=True)
-    df.replace(np.nan, None, inplace=True)
-    df_dict = df.to_dict()
-    
-    #preparing upload
-    messages = {}
-    missing_messages = {}
-
-    for topic in df_dict.keys():
-        messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "DefiLama",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is not None
-        ]
+            all_coin_data.append(coin_data.copy())
+            logging.info(f"Fetching token data for {coin} from {integration_name}...({len(all_coin_data)}/{len(coins.keys())})")
         
-    for k,v in messages.items():
-        for m in v:
-            try:
-                validate(m, schema)
-            except:
-                ("Wrongly formatted schema found:" +m)
-    publish_to_kafka(messages)
-    
-    for topic in df_dict.keys():
-        missing_messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "DefiLama",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is None
-        ]
-
+            time.sleep(10)
+            
+    messages, missing_messages = format_response(all_coin_data, integration_name)
+        
+    #for k,v in messages.items():
+    #    for m in v:
+    #        try:
+    #            validate(m, schema)
+    #        except:
+    #            ("Wrongly formatted schema found:" +m)
          
+    write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
+    write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
     c = msg.set(json.dumps(messages))
-    logging.info(c)
+    
 
 
     return c

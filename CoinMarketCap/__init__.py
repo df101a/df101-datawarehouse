@@ -3,45 +3,31 @@ import logging
 import os
 import requests
 import json
+import time
 import pandas as pd
 import numpy as np
 import azure.functions as func
 from collections.abc import MutableMapping
 import pandas as pd
 from src.kafka_producer import Df101KafkaProducer
+from src.utils import write_message_to_json, flatten_dict, get, format_response, publish_to_kafka, get_empty_coin_data, populate_coin_data
+
+from src.schemas import coinmarketcap_schema
+from src.key_mappings import coinmarketcap_map
 from jsonschema import validate
 import json
 
-with open('schema.json', 'r') as file:
-    schema = json.load(file)
+#with open('schema.json', 'r') as file:
+#    schema = json.load(file)
 
 
-def publish_to_kafka(messages: dict):
-     kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
-     for key in messages.keys():
-        topic_name = key
-        logging.info(topic_name)
-        for coin in messages[key]:
-            kfk_prod.send(topic=topic_name, message=coin)
-
-def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
-    if len(d.keys()) == 0:
-        return {}
-    [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
-    return flat_dict
-
-def get_all_data(token_id, cmc_id):
-    logging.info(cmc_id)
+def prepare_data(id):
+    logging.info(id)
     headers = {'X-CMC_PRO_API_KEY': os.environ.get("coin-market-cap-token")}
-    try:
-        res = requests.get(
-                    url="https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"+"?id="+','.join(map(str, cmc_id)),
-                    headers=headers
-            ).json()
-    except Exception as e:
-        logging.error(f"Encountered an exception when fetching Coin Market Cap data for token {token_id} -- {str(e)}")
-        res = {}
 
+    res = get(url="https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"+"?id="+','.join(map(str, id)), headers=headers)
+    
+    res = res['data'][str(id[0])]
     res = flatten_dict(dict(res))
     
     with open('function_logs/datapoints/cmc.txt', 'w') as f:
@@ -50,112 +36,49 @@ def get_all_data(token_id, cmc_id):
        
     return res
 
-def get_empty_coin_data(coin):
-    coin_data = {}
-    coin_data['token'] = coin
-    coin_data["timestampz"] = (
-        datetime.datetime.utcnow()
-        .replace(tzinfo=datetime.timezone.utc)
-        .isoformat()
-    )
-    coin_data['current_price_usd'] = None
-    coin_data['market_capitalization_fully_diluted'] = None
-    coin_data['trading_volume_24h'] = None
-    coin_data['max_supply'] = None
-    coin_data['total_supply'] = None
-    
-    return coin_data
-
 def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
-    DUMP_DATAPOINTS = True
+    
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
 
     with open('tokens.json', 'r') as f:
-            tokens = json.load(f)
+            coins = json.load(f)
         
+    integration_id = 'cmc_id'
+    integration_name = 'CoinMarketCap'
+
     all_coin_data = []
-    for token in tokens.keys():
-        if tokens[token]['cmc_id']:
-            data = get_all_data(token_id=token, cmc_id=[tokens[token]['cmc_id']])
-            if data == {}:
-                all_coin_data.append(get_empty_coin_data(token))
-                continue
-            
-            coin_data={}
-            coin_data['token'] = token
-            coin_data['current_price_usd']= data[f"data.{tokens[token]['cmc_id']}.quote.USD.price"] if  f"data.{tokens[token]['cmc_id']}.quote.USD.price" in data.keys() else None
-            coin_data['market_capitalization_fully_diluted']= data[f"data.{tokens[token]['cmc_id']}.quote.USD.fully_diluted_market_cap"] if  f"data.{tokens[token]['cmc_id']}.quote.USD.fully_diluted_market_cap" in data.keys() else None
-            coin_data['trading_volume_24h']= data[f"data.{tokens[token]['cmc_id']}.quote.USD.volume_24h"] if  f"data.{tokens[token]['cmc_id']}.quote.USD.volume_24h" in data.keys() else None
-            coin_data['max_supply']= data[f"data.{tokens[token]['cmc_id']}.max_supply"] if  f"data.{tokens[token]['cmc_id']}.max_supply" in data.keys() else None
-            coin_data['total_supply']= data[f"data.{tokens[token]['cmc_id']}.total_supply"] if  f"data.{tokens[token]['cmc_id']}.total_supply" in data.keys() else None
-            coin_data["timestampz"] = (
-                datetime.datetime.utcnow()
-                .replace(tzinfo=datetime.timezone.utc)
-                .isoformat()
-            )
-            all_coin_data.append(coin_data)
-            logging.info(coin_data)
-        else:
-            logging.error(f"Found no coin market cap ID for token {token}")
-    
-    # update_time = res.json()['status']['timestamp']
+    for coin in coins.keys():
+        if coins[coin]['cmc_id']:
+            data = prepare_data(id=[coins[coin][integration_id]])
+            coin_data = get_empty_coin_data(coin=coin, schema=coinmarketcap_schema)
+            coin_data = populate_coin_data(coin_data=coin_data, api_data=data, key_mapping=coinmarketcap_map)
+            all_coin_data.append(coin_data.copy())
+            logging.info(f"Fetching token data for {coin} from {integration_name}...({len(all_coin_data)}/{len(coins.keys())})")
         
-    #Formatting all responses    
-    df = pd.DataFrame(all_coin_data)  # dataframing because this is easier
-    df.set_index("token", inplace=True)
-    update_time = df[["timestampz"]].to_dict()
-    df.drop(columns=["timestampz"], inplace=True)
-    df.replace(np.nan, None, inplace=True)
-    df.replace('N/A', None, inplace=True)
-    df_dict = df.to_dict()
-    
-    
-    #preparing upload
-    messages = {}
-    missing_messages = {}
-    
-    for topic in df_dict.keys():
-        messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "CoinMarketCap",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is not None
-        ]
+        time.sleep(10)
+            
+    messages, missing_messages = format_response(all_coin_data, integration_name)
       
-    for k,v in messages.items():
-        for m in v:
-            try:
-                validate(m, schema)
-            except:
-                ("Wrongly formatted schema found:" +m)
+    #for k,v in messages.items():
+    #    for m in v:
+    #        try:
+    #            validate(m, schema)
+    #        except:
+    #            ("Wrongly formatted schema found:" +m)
 
-    publish_to_kafka(messages)
+    #publish_to_kafka(messages)
     
-    for topic in df_dict.keys():
-        missing_messages[topic] = [
-            {
-                "token": k,
-                "value": v,
-                "timestampz": update_time["timestampz"][k],
-                "source": "CoinMarketCap",
-                # "GUID_functions": context.invocation_id,
-            }
-            for k, v in df_dict[topic].items()
-            if v is None
-        ]
 
-    with open('function_logs/missing/cmc.json', 'w') as f:
-         f.write(json.dumps(missing_messages))
 
-    logging.info(json.dumps(messages))
+    #with open('function_logs/missing/cmc.json', 'w') as f:
+    #     f.write(json.dumps(missing_messages))
+
+    write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
+    write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
+
     msg.set(json.dumps(messages))

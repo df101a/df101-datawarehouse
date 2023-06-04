@@ -1,1 +1,312 @@
-{"github_commits": [{"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_average_commits_per_week": [{"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_contributors": [{"token": "ATOM", "value": null, "timestampz": "2023-03-13T23:16:56.615111+00:00", "source": "Github"}, {"token": "ADA", "value": null, "timestampz": "2023-03-13T23:17:00.750116+00:00", "source": "Github"}, {"token": "TRX", "value": null, "timestampz": "2023-03-13T23:17:04.703308+00:00", "source": "Github"}, {"token": "EOS", "value": null, "timestampz": "2023-03-13T23:17:08.717255+00:00", "source": "Github"}, {"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "BNB", "value": null, "timestampz": "2023-03-13T23:17:16.713767+00:00", "source": "Github"}, {"token": "DOT", "value": null, "timestampz": "2023-03-13T23:17:20.647488+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_forks": [{"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_watchers": [{"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_stars": [{"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_merged_pull_requests": [{"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_open_issues": [{"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_closed_issues": [{"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_commit_speed_per_contributor": [{"token": "ATOM", "value": null, "timestampz": "2023-03-13T23:16:56.615111+00:00", "source": "Github"}, {"token": "ADA", "value": null, "timestampz": "2023-03-13T23:17:00.750116+00:00", "source": "Github"}, {"token": "TRX", "value": null, "timestampz": "2023-03-13T23:17:04.703308+00:00", "source": "Github"}, {"token": "EOS", "value": null, "timestampz": "2023-03-13T23:17:08.717255+00:00", "source": "Github"}, {"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "BNB", "value": null, "timestampz": "2023-03-13T23:17:16.713767+00:00", "source": "Github"}, {"token": "DOT", "value": null, "timestampz": "2023-03-13T23:17:20.647488+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}], "github_capitalization_contributors": [{"token": "ATOM", "value": null, "timestampz": "2023-03-13T23:16:56.615111+00:00", "source": "Github"}, {"token": "ADA", "value": null, "timestampz": "2023-03-13T23:17:00.750116+00:00", "source": "Github"}, {"token": "TRX", "value": null, "timestampz": "2023-03-13T23:17:04.703308+00:00", "source": "Github"}, {"token": "EOS", "value": null, "timestampz": "2023-03-13T23:17:08.717255+00:00", "source": "Github"}, {"token": "NEAR", "value": null, "timestampz": "2023-03-13T23:17:13.039984+00:00", "source": "Github"}, {"token": "BNB", "value": null, "timestampz": "2023-03-13T23:17:16.713767+00:00", "source": "Github"}, {"token": "DOT", "value": null, "timestampz": "2023-03-13T23:17:20.647488+00:00", "source": "Github"}, {"token": "EGLD", "value": null, "timestampz": "2023-03-13T23:17:22.650107+00:00", "source": "Github"}, {"token": "AVAX", "value": null, "timestampz": "2023-03-13T23:17:22.650533+00:00", "source": "Github"}, {"token": "GRT", "value": null, "timestampz": "2023-03-13T23:17:22.650927+00:00", "source": "Github"}, {"token": "XLM", "value": null, "timestampz": "2023-03-13T23:17:22.651313+00:00", "source": "Github"}, {"token": "ROSE", "value": null, "timestampz": "2023-03-13T23:17:22.651694+00:00", "source": "Github"}, {"token": "MATIC", "value": null, "timestampz": "2023-03-13T23:17:22.652074+00:00", "source": "Github"}, {"token": "XTZ", "value": null, "timestampz": "2023-03-13T23:17:22.652453+00:00", "source": "Github"}, {"token": "HNT", "value": null, "timestampz": "2023-03-13T23:17:22.652805+00:00", "source": "Github"}, {"token": "ICP", "value": null, "timestampz": "2023-03-13T23:17:22.653107+00:00", "source": "Github"}, {"token": "AXS", "value": null, "timestampz": "2023-03-13T23:17:22.653408+00:00", "source": "Github"}, {"token": "REQ", "value": null, "timestampz": "2023-03-13T23:17:22.653707+00:00", "source": "Github"}, {"token": "MANA", "value": null, "timestampz": "2023-03-13T23:17:22.654009+00:00", "source": "Github"}, {"token": "SAND", "value": null, "timestampz": "2023-03-13T23:17:22.654309+00:00", "source": "Github"}, {"token": "OP", "value": null, "timestampz": "2023-03-13T23:17:22.654608+00:00", "source": "Github"}, {"token": "ZIL", "value": null, "timestampz": "2023-03-13T23:17:22.654908+00:00", "source": "Github"}, {"token": "FLOW", "value": null, "timestampz": "2023-03-13T23:17:22.655208+00:00", "source": "Github"}]}
+{
+    "github_commits": [],
+    "github_average_commits_per_week": [],
+    "github_contributors": [],
+    "github_forks": [],
+    "github_watchers": [],
+    "github_stars": [],
+    "github_merged_pull_requests": [
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:41.856742+00:00",
+            "source": "Github"
+        }
+    ],
+    "github_open_issues": [
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:41.856742+00:00",
+            "source": "Github"
+        }
+    ],
+    "github_closed_issues": [
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:41.856742+00:00",
+            "source": "Github"
+        }
+    ],
+    "github_commit_speed_per_contributor": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-05-07T17:52:51.684006+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ADA",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:04.104988+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "TRX",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:16.684008+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:28.880091+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:41.856742+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "BNB",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:54.602793+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "DOT",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:06.626189+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "EGLD",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:18.898573+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "AVAX",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:31.788852+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "GRT",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:44.102671+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "XLM",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:56.299434+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ROSE",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:08.506462+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "MATIC",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:21.460033+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:33.654875+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "HNT",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:47.293573+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ICP",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:59.872404+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "AXS",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:12.459628+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "REQ",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:24.673242+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "MANA",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:37.251915+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "SAND",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:49.547713+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "OP",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:01.747877+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ZIL",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:14.319070+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "FLOW",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:26.903959+00:00",
+            "source": "Github"
+        }
+    ],
+    "github_capitalization_contributors": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-05-07T17:52:51.684006+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ADA",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:04.104988+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "TRX",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:16.684008+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:28.880091+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:41.856742+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "BNB",
+            "value": null,
+            "timestampz": "2023-05-07T17:53:54.602793+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "DOT",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:06.626189+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "EGLD",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:18.898573+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "AVAX",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:31.788852+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "GRT",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:44.102671+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "XLM",
+            "value": null,
+            "timestampz": "2023-05-07T17:54:56.299434+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ROSE",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:08.506462+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "MATIC",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:21.460033+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:33.654875+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "HNT",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:47.293573+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ICP",
+            "value": null,
+            "timestampz": "2023-05-07T17:55:59.872404+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "AXS",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:12.459628+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "REQ",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:24.673242+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "MANA",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:37.251915+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "SAND",
+            "value": null,
+            "timestampz": "2023-05-07T17:56:49.547713+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "OP",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:01.747877+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "ZIL",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:14.319070+00:00",
+            "source": "Github"
+        },
+        {
+            "token": "FLOW",
+            "value": null,
+            "timestampz": "2023-05-07T17:57:26.903959+00:00",
+            "source": "Github"
+        }
+    ]
+}
