@@ -12,7 +12,10 @@ coingecko_schema = {
     'subreddit_url': str,
     'twitter_screen_name': str,
     'telegram_channel_identifier':str,
-    'github_contributors': str
+    'github_contributors': str,
+    'twitter_followers': str,
+    'reddit_subscribers': str,
+    'telegram_channel_user_count': str
 }
 
 coinmarketcap_schema = {
@@ -58,5 +61,6 @@ glassnode_schema = {
     'drop_from_ath': str,
     'active_validators_count': str,
     'inflation_rate': str,
-    'gas_price_mean': str
+    'gas_price_mean': str,
+    'wallet_count': str
 }

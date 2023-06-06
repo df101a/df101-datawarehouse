@@ -6,67 +6,73 @@
         {
             "token": "ATOM",
             "value": null,
-            "timestampz": "2023-05-07T17:18:34.894644+00:00",
+            "timestampz": "2023-06-04T15:50:27.283337+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "TRX",
             "value": null,
-            "timestampz": "2023-05-07T17:18:55.435641+00:00",
+            "timestampz": "2023-06-04T15:50:48.204137+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "EOS",
             "value": null,
-            "timestampz": "2023-05-07T17:19:06.026878+00:00",
+            "timestampz": "2023-06-04T15:50:58.691867+00:00",
+            "source": "CoinMarketCap"
+        },
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-06-04T15:51:09.129418+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "BNB",
             "value": null,
-            "timestampz": "2023-05-07T17:19:26.885873+00:00",
+            "timestampz": "2023-06-04T15:51:20.790419+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "DOT",
             "value": null,
-            "timestampz": "2023-05-07T17:19:37.348134+00:00",
+            "timestampz": "2023-06-04T15:51:31.300087+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "GRT",
             "value": null,
-            "timestampz": "2023-05-07T17:20:08.883674+00:00",
+            "timestampz": "2023-06-04T15:52:02.697849+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "ROSE",
             "value": null,
-            "timestampz": "2023-05-07T17:20:30.037711+00:00",
+            "timestampz": "2023-06-04T15:52:23.682240+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "XTZ",
             "value": null,
-            "timestampz": "2023-05-07T17:20:50.774905+00:00",
+            "timestampz": "2023-06-04T15:52:44.576015+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "ICP",
             "value": null,
-            "timestampz": "2023-05-07T17:21:11.097177+00:00",
+            "timestampz": "2023-06-04T15:53:04.943718+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "MANA",
             "value": null,
-            "timestampz": "2023-05-07T17:21:41.636955+00:00",
+            "timestampz": "2023-06-04T15:53:35.789086+00:00",
             "source": "CoinMarketCap"
         },
         {
             "token": "FLOW",
             "value": null,
-            "timestampz": "2023-05-07T17:22:23.049282+00:00",
+            "timestampz": "2023-06-04T15:54:16.925413+00:00",
             "source": "CoinMarketCap"
         }
     ],

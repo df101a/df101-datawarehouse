@@ -9,7 +9,10 @@ coingecko_map = {
     'subreddit_url': 'links.subreddit_url',
     'twitter_screen_name': 'links.twitter_screen_name',
     'telegram_channel_identifier': 'links.telegram_channel_identifier',
-    'github_contributors': 'developer_data.pull_request_contributors'
+    'github_contributors': 'developer_data.pull_request_contributors',
+    'twitter_followers': 'community_data.twitter_followers',
+    'reddit_subscribers': 'community_data.reddit_subscribers',
+    'telegram_channel_user_count': 'community_data.telegram_channel_user_count'
 }
 
 coinmarketcap_map = {

@@ -71,7 +71,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     #        except:
     #            ("Wrongly formatted schema found:" +m)
 
-    #publish_to_kafka(messages)
+    publish_to_kafka(messages)
     
 
 

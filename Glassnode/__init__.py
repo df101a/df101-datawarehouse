@@ -58,7 +58,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     all_coin_data = []
     for coin in coins.keys():
         coin_data = get_empty_coin_data(coin=coin, schema=glassnode_schema)
-          
+        logging.info(f"Fetching token data for {coin} from {integration_name}...({len(all_coin_data)}/{len(coins.keys())})")
         data = get_all_data(coin)
 
         coin_data = populate_coin_data(coin_data=coin_data, api_data=data, key_mapping=glassnode_map)
@@ -77,7 +77,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     #            validate(m, schema)
     #        except:
     #            ("Wrongly formatted schema found:" +m)
-         
+
+    publish_to_kafka(messages)
     write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
     write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
     c = msg.set(json.dumps(messages))

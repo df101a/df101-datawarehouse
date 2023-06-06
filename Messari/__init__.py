@@ -60,8 +60,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         coins = json.load(f)
         
     for coin in coins.keys():
-        logging.info(f"Fetching Messari data for token {coin_key}")
-        
+        logging.info(f"Fetching Messari data for token {coin}")
+        logging.info(f"Fetching token data for {coin} from {integration_name}...({len(all_coin_data)}/{len(coins.keys())})")
         messari_symbol = coins[coin]['messari_symbol']
         cg_id = coins[coin]['cg_id']
 
@@ -81,8 +81,8 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         price = float(price) if price else None
 
         
-        coin_data['circulating_supply_percentage'] = circulating / total_supply if circulating and total_supply else None,
-        coin_data['tokens_staked'] = total_supply - circulating if circulating and total_supply else None,
+        coin_data['circulating_supply_percentage'] = circulating / total_supply if circulating and total_supply else None
+        coin_data['tokens_staked'] = total_supply - circulating if circulating and total_supply else None
         coin_data['assets_staked_on_chain'] = (total_supply - circulating) * price if total_supply and price and circulating else None
 
 
@@ -91,8 +91,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
         time.sleep(10)
     
     messages, missing_messages = format_response(all_coin_data, integration_name)       
-    
-    
+    publish_to_kafka(messages)
     #for k,v in messages.items():
     #    for m in v:
     #        try:

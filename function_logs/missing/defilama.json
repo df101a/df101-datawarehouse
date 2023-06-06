@@ -3,43 +3,43 @@
         {
             "token": "TRX",
             "value": null,
-            "timestampz": "2023-05-07T17:30:16.991917+00:00",
+            "timestampz": "2023-06-04T15:57:00.722178+00:00",
             "source": "DefiLama"
         },
         {
             "token": "GRT",
             "value": null,
-            "timestampz": "2023-05-07T17:31:27.023316+00:00",
+            "timestampz": "2023-06-04T15:58:10.746829+00:00",
             "source": "DefiLama"
         },
         {
             "token": "HNT",
             "value": null,
-            "timestampz": "2023-05-07T17:32:17.044206+00:00",
+            "timestampz": "2023-06-04T15:59:00.764049+00:00",
             "source": "DefiLama"
         },
         {
             "token": "AXS",
             "value": null,
-            "timestampz": "2023-05-07T17:32:37.054809+00:00",
+            "timestampz": "2023-06-04T15:59:20.772896+00:00",
             "source": "DefiLama"
         },
         {
             "token": "REQ",
             "value": null,
-            "timestampz": "2023-05-07T17:32:47.058964+00:00",
+            "timestampz": "2023-06-04T15:59:30.774834+00:00",
             "source": "DefiLama"
         },
         {
             "token": "MANA",
             "value": null,
-            "timestampz": "2023-05-07T17:32:57.062716+00:00",
+            "timestampz": "2023-06-04T15:59:40.780741+00:00",
             "source": "DefiLama"
         },
         {
             "token": "SAND",
             "value": null,
-            "timestampz": "2023-05-07T17:33:07.067293+00:00",
+            "timestampz": "2023-06-04T15:59:50.782530+00:00",
             "source": "DefiLama"
         }
     ]

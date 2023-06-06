@@ -69,7 +69,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
             time.sleep(10)
             
     messages, missing_messages = format_response(all_coin_data, integration_name)
-        
+    publish_to_kafka(messages)
     #for k,v in messages.items():
     #    for m in v:
     #        try:
