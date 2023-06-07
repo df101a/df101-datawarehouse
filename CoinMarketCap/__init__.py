@@ -78,7 +78,7 @@ def main(mytimer: func.TimerRequest, msg: func.Out[str]) -> None:
     #with open('function_logs/missing/cmc.json', 'w') as f:
     #     f.write(json.dumps(missing_messages))
 
-    write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
-    write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
+    # write_message_to_json(missing_messages, f'function_logs/missing/{integration_name}.json')
+    # write_message_to_json(messages, f'function_logs/successful/{integration_name}.json')
 
     msg.set(json.dumps(messages))
