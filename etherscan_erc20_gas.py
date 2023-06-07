@@ -10,7 +10,7 @@ erc_20_gas = (
             params={
                 "module": "gastracker",
                 "action": "gasoracle",
-                "apikey": os.environ.get("etherscan-access-token"),
+                "apikey": os.environ.get("etherscan_access_token"),
             },
         ).json()["result"]["ProposeGasPrice"]
     )
@@ -32,5 +32,5 @@ for token_id in tokens_dict:
         #print("N")
         pass
 
-with open('sample_data/etherscan_erc_20_gas_data.json', 'w') as f:
-    f.write(json.dumps(report_gas))
+# with open('sample_data/etherscan_erc_20_gas_data.json', 'w') as f:
+#     f.write(json.dumps(report_gas))

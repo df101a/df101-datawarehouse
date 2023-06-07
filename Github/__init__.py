@@ -21,7 +21,7 @@ from src.key_mappings import github_map
 
 
 def prepare_data(repo_name: str):
-    access_token = os.environ.get("github-access-token") # WILL EXPIRE IN MARCH 2024
+    access_token = os.environ.get("github_access_token") # WILL EXPIRE IN MARCH 2024
     headers = {"Authorization": f"Bearer {access_token}"}
     
     data_points = [

@@ -27,7 +27,7 @@ def prepare_data(cg_id, messari_symbol):
     cg_data = get(url=f"https://api.coingecko.com/api/v3/coins/{cg_id}")
     data['cg'] = dict(cg_data)
 
-    messari_token = os.environ.get('messari-api-key')
+    messari_token = os.environ.get('messari_api_key')
     headers = {"X-Api-Key": f"{messari_token}"}
     messari_data = get(
         url=f"https://data.messari.io/api/v1/assets/{messari_symbol}/metrics?fields=supply/circulating,market_data/price_usd",

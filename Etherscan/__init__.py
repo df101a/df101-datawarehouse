@@ -22,7 +22,7 @@ def prepare_data():
             params={
                 "module": "gastracker",
                 "action": "gasoracle",
-                "apikey": os.environ.get("etherscan-access-token"),
+                "apikey": os.environ.get("etherscan_access_token"),
             }
         )
     

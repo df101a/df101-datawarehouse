@@ -23,16 +23,16 @@ import json
 
 def prepare_data(id):
     logging.info(id)
-    headers = {'X-CMC_PRO_API_KEY': os.environ.get("coin-market-cap-token")}
+    headers = {'X-CMC_PRO_API_KEY': os.environ.get("coin_market_cap_token")}
 
     res = get(url="https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"+"?id="+','.join(map(str, id)), headers=headers)
     
     res = res['data'][str(id[0])]
     res = flatten_dict(dict(res))
     
-    with open('function_logs/datapoints/cmc.txt', 'w') as f:
-        for key in res.keys():
-            f.write(f"{key}\n")
+    # with open('function_logs/datapoints/cmc.txt', 'w') as f:
+    #     for key in res.keys():
+    #         f.write(f"{key}\n")
        
     return res
 

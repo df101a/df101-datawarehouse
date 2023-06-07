@@ -21,7 +21,7 @@ with open('schema.json', 'r') as file:
 def get_all_data(token_id):
     data = {}
 
-    glassnode_token = os.environ.get('glassnode-api-key')
+    glassnode_token = os.environ.get('glassnode_api_key')
     params = {'a': token_id, 'api_key': glassnode_token}
 
     endpoints = [

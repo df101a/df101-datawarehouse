@@ -31,7 +31,7 @@ def get(url: str, headers: dict = {}, params: dict = {}):
     return res
 
 def publish_to_kafka(messages: dict):
-     kfk_prod = Df101KafkaProducer(os.environ.get('kafka-connection-string'))
+     kfk_prod = Df101KafkaProducer(os.environ.get('kafka_connection_string'))
      for key in messages.keys():
         topic_name = key
         logging.info(topic_name)

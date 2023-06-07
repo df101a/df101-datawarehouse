@@ -23,9 +23,9 @@ def prepare_data(cg_id):
     
     res = flatten_dict(dict(res))
     
-    with open('function_logs/datapoints/cg.txt', 'w') as f:
-        for key in res.keys():
-            f.write(f"{key}\n")
+    # with open('function_logs/datapoints/cg.txt', 'w') as f:
+    #     for key in res.keys():
+    #         f.write(f"{key}\n")
 
     return res  
 
