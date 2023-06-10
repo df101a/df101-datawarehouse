@@ -45,7 +45,7 @@ def get_empty_coin_data(coin: str, schema: dict):
     schema['timestampz'] = (
         datetime.utcnow()
         .replace(tzinfo=timezone.utc)
-        .isoformat()
+        .timestamp()
     )
     return schema
 
