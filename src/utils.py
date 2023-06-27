@@ -42,11 +42,11 @@ def get_empty_coin_data(coin: str, schema: dict):
     for key in schema.keys():
         schema[key] = None
     schema['token'] = coin 
-    schema['timestampz'] = (
+    schema['timestampz'] = int((
         datetime.utcnow()
         .replace(tzinfo=timezone.utc)
         .timestamp()
-    )
+    ))
     return schema
 
 def populate_coin_data(coin_data: dict, api_data: dict, key_mapping: dict):
