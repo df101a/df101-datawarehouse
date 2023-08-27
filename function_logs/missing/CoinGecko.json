@@ -1,0 +1,311 @@
+{
+    "current_price_usd": [],
+    "total_supply": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:22.100279+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:55.261113+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:42.856238+00:00",
+            "source": "CoinGecko"
+        }
+    ],
+    "fully_diluted_valuation": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:22.100279+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:55.261113+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:42.856238+00:00",
+            "source": "CoinGecko"
+        }
+    ],
+    "max_supply": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:22.100279+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "TRX",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:44.179458+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:55.261113+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:06.221255+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "DOT",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:27.397427+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "GRT",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:59.616119+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:42.856238+00:00",
+            "source": "CoinGecko"
+        }
+    ],
+    "fully_diluted_valuation_calculated": [
+        {
+            "token": "ATOM",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:22.100279+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "ADA",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:32.991599+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "TRX",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:44.179458+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:55.261113+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:06.221255+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "BNB",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:16.710819+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "DOT",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:27.397427+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "EGLD",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:38.013624+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "AVAX",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:48.809719+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "GRT",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:59.616119+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XLM",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:10.515728+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "ROSE",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:21.197057+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "MATIC",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:31.780959+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:42.856238+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "HNT",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:53.814558+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "ICP",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:04.627030+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "AXS",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:15.720652+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "REQ",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:26.311324+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "MANA",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:37.142554+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "SAND",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:48.013002+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "OP",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:59.177429+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "ZIL",
+            "value": null,
+            "timestampz": "2023-06-04T15:45:10.205300+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "FLOW",
+            "value": null,
+            "timestampz": "2023-06-04T15:45:20.862517+00:00",
+            "source": "CoinGecko"
+        }
+    ],
+    "total_volume": [],
+    "all_time_high": [],
+    "repos_url": [],
+    "subreddit_url": [
+        {
+            "token": "NEAR",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:06.221255+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "AXS",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:15.720652+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "SAND",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:48.013002+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "OP",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:59.177429+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "FLOW",
+            "value": null,
+            "timestampz": "2023-06-04T15:45:20.862517+00:00",
+            "source": "CoinGecko"
+        }
+    ],
+    "twitter_screen_name": [],
+    "telegram_channel_identifier": [],
+    "github_contributors": [],
+    "twitter_followers": [],
+    "reddit_subscribers": [],
+    "telegram_channel_user_count": [
+        {
+            "token": "EOS",
+            "value": null,
+            "timestampz": "2023-06-04T15:41:55.261113+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "BNB",
+            "value": null,
+            "timestampz": "2023-06-04T15:42:16.710819+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XLM",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:10.515728+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "XTZ",
+            "value": null,
+            "timestampz": "2023-06-04T15:43:42.856238+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "REQ",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:26.311324+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "MANA",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:37.142554+00:00",
+            "source": "CoinGecko"
+        },
+        {
+            "token": "OP",
+            "value": null,
+            "timestampz": "2023-06-04T15:44:59.177429+00:00",
+            "source": "CoinGecko"
+        }
+    ]
+}

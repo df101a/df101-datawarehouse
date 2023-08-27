@@ -1,39 +1,45 @@
 {
     "TVL": [
         {
+            "token": "TRX",
+            "value": null,
+            "timestampz": "2023-06-04T15:57:00.722178+00:00",
+            "source": "DefiLama"
+        },
+        {
             "token": "GRT",
             "value": null,
-            "timestampz": "2023-03-20T19:08:12.253122+00:00",
+            "timestampz": "2023-06-04T15:58:10.746829+00:00",
             "source": "DefiLama"
         },
         {
             "token": "HNT",
             "value": null,
-            "timestampz": "2023-03-20T19:08:32.274180+00:00",
+            "timestampz": "2023-06-04T15:59:00.764049+00:00",
             "source": "DefiLama"
         },
         {
             "token": "AXS",
             "value": null,
-            "timestampz": "2023-03-20T19:08:40.279733+00:00",
+            "timestampz": "2023-06-04T15:59:20.772896+00:00",
             "source": "DefiLama"
         },
         {
             "token": "REQ",
             "value": null,
-            "timestampz": "2023-03-20T19:08:44.285223+00:00",
+            "timestampz": "2023-06-04T15:59:30.774834+00:00",
             "source": "DefiLama"
         },
         {
             "token": "MANA",
             "value": null,
-            "timestampz": "2023-03-20T19:08:48.290905+00:00",
+            "timestampz": "2023-06-04T15:59:40.780741+00:00",
             "source": "DefiLama"
         },
         {
             "token": "SAND",
             "value": null,
-            "timestampz": "2023-03-20T19:08:52.296116+00:00",
+            "timestampz": "2023-06-04T15:59:50.782530+00:00",
             "source": "DefiLama"
         }
     ]
