@@ -71,4 +71,4 @@ Currently we have the folloiwng integrations:
 | Merged pull requests | Developers |  | GitHub |
 | Open issues | Developers |  | GitHub |
 | Closed issues | Developers |  | GitHub |
-| Commit speed per contributor |  | Commit speed / Github contributors |  |
+| Commit speed per contributor |  | Commit speed / Github contributors | DWH |
