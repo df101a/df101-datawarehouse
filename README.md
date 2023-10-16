@@ -55,6 +55,14 @@ Currently we have the folloiwng integrations:
 | Assets staked on chain (TVL) | Market Data | Current price * Max supply | DefiLama |
 | Market capitalisation fully diluted | Market Data | Current price * Circulation supply / TVL | DWH |
 | Current price | Market Data |  | CG, CMC |
+| circulating_supply_percentage | Market Data |  | Messari |
+| tokens_staked | Market Data |  | Messari |
+| assets_staked_on_chain | Market Data |  | Messari |
+| drop_from_ath | Market Data |  | Glassnode |
+| active_validators_count  | Market Data |  | Glassnode |
+|  inflation_rate  | Market Data |  | Glassnode |
+|  wallet_count | Market Data |  | Glassnode |
+|  gas_price_mean | Market Data |  | Glassnode |
 | Drop from ATH | Market Data |  |  |
 | Max supply | Tokenomics |  |  |
 | Total supply | Tokenomics |  |  |
